@@ -1,10 +1,10 @@
 #!/usr/bin/perl -wT
 #
-# $Id: ezmanage-menu.cgi,v 1.1 2000/03/20 17:29:39 tv42 Exp $
+# $Id: ezmanage-menu.cgi,v 1.2 2000/03/21 20:59:22 tv42 Exp $
 #
 # ezmanage-menu.cgi - main menu for ezmanage
 #
-# Copyright (C) 1998 Tommi Virtanen
+# Copyright (C) 1998-2000 Tommi Virtanen
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -114,12 +114,12 @@ main();
 
 sub about($) {
   my ($query) = @_;
-  my ($n, $v) = ' $Id: ezmanage-menu.cgi,v 1.1 2000/03/20 17:29:39 tv42 Exp $ ' =~ m{^.*?Id: (\S+) (\S+) .*};
+  my ($n, $v) = ' $Id: ezmanage-menu.cgi,v 1.2 2000/03/21 20:59:22 tv42 Exp $ ' =~ m{^.*?Id: (\S+) (\S+) .*};
   $v='0.0' unless defined $v;
   $n='unknown' unless defined $n;
   $n =~ s/,v$//g;
   return 
     "\n\n", $query->hr, "\n",
-    '<SMALL>', "$n v$v, Copyright 1998 Tommi Virtanen, Havoc Consulting.", '</SMALL>', "\n",
+    '<SMALL>', "$n v$v, Copyright 1998-2000 Tommi Virtanen, Havoc Consulting.", '</SMALL>', "\n",
     $query->end_html, "\n";
 }

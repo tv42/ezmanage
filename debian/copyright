@@ -1,5 +1,7 @@
 ezmanage - simple interface to managing multiple mailing lists
-Copyright (C) 1998 Tommi Virtanen
+Copyright (C) 1998-2000 Tommi Virtanen
+
+ezmanage can be downloaded from http://ezmanage.sourceforge.net/
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,6 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/doc/copyright/GPL'.
+Public License can be found in `/usr/share/common-licenses/GPL'.
 
 Tommi Virtanen <tv@debian.org>

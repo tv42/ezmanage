@@ -2,7 +2,8 @@ Source: ezmanage
 Section: contrib/mail
 Priority: optional
 Maintainer: Tommi Virtanen <tv@debian.org>
-Standards-Version: 2.4.0.0
+Standards-Version: 3.1.1
+Build-Depends: debhelper, perl5, wml
 
 Package: ezmanage
 Architecture: all

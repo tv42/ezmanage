@@ -1,9 +1,9 @@
 ## -*- html -*-
 #
-# $Id: template.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $
+# $Id: template.wml,v 1.2 2000/03/21 20:59:22 tv42 Exp $
 
 # Template for generating the ezmanage documentation.
-# Copyright (C) 1998 Tommi Virtanen
+# Copyright (C) 1998-2000 Tommi Virtanen
 
 # This information is free; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by

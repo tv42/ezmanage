@@ -1,10 +1,10 @@
 #!/usr/bin/perl -wT
 #
-# $Id: ezmanage-websub.cgi,v 1.1 2000/03/20 17:29:39 tv42 Exp $
+# $Id: ezmanage-websub.cgi,v 1.2 2000/03/21 20:59:22 tv42 Exp $
 #
 # ezmanage-websub.cgi - subscribe to a mailing list via WWW
 #
-# Copyright (C) 1998 Tommi Virtanen
+# Copyright (C) 1998-2000 Tommi Virtanen
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

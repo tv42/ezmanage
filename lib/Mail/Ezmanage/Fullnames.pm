@@ -1,8 +1,8 @@
 #
-# $Id: Fullnames.pm,v 1.1 2000/03/20 17:29:39 tv42 Exp $
+# $Id: Fullnames.pm,v 1.2 2000/03/21 20:59:22 tv42 Exp $
 #
 # Module Mail::Ezmanage::Fullnames - a library to manipulate multiple Ezmlm mailing lists
-# Copyright (C) 1998 Tommi Virtanen
+# Copyright (C) 1998-2000 Tommi Virtanen
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@
 package Mail::Ezmanage::Fullnames;
 
 sub Version { $VERSION; }
-$VERSION = sprintf("%d.%02d", q$Revision: 1.1 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.2 $ =~ /(\d+)\.(\d+)/);
 
 =head1 NAME
 

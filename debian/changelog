@@ -1,3 +1,12 @@
+ezmanage (1.9) unstable; urgency=low
+
+  * Moved over to sourceforge, added references to the web pages.
+  * Debian policy 3.1.1 (FHS, Build-Depends)
+  * Updated copyrights.
+  * Added #DEBHELPER# to preinst.
+
+ -- Tommi Virtanen <tv@debian.org>  Tue, 21 Mar 2000 22:57:38 +0200
+
 ezmanage (1.8) unstable; urgency=low
 
   * Depend on perl5

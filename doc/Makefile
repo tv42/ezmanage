@@ -1,6 +1,6 @@
 #
-# $Id: Makefile,v 1.1 2000/03/20 17:29:39 tv42 Exp $
-# Copyright 1998 Tommi Virtanen, Havoc Consulting
+# $Id: Makefile,v 1.2 2000/03/21 20:59:22 tv42 Exp $
+# Copyright 1998-2000 Tommi Virtanen, Havoc Consulting
 #
 HTML = ezmanage.html \
 	admin/structure.html \
@@ -14,7 +14,7 @@ FILES = $(HTML) $(TODO)
 OPTIONS = -q -DROOT~. -I. --includefile=template.wml
 #--epilog=weblint --epilog=linklint
 
-INSTDIR=/usr/doc/ezmanage
+INSTDIR=/usr/share/doc/ezmanage
 
 all: $(FILES)
 

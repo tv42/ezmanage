@@ -5,3 +5,5 @@ if [ "x$1" = "xupgrade" -a \
 	cp -ar /usr/lib/ezmanage/config /etc/ezmanage
 	rm -rf /usr/lib/ezmanage/config
 fi
+
+#DEBHELPER#

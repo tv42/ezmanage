@@ -1,9 +1,9 @@
 #
-# $Id: Makefile,v 1.1 2000/03/20 17:29:38 tv42 Exp $
+# $Id: Makefile,v 1.2 2000/03/21 20:59:22 tv42 Exp $
 #
 # Makefile for ezmanage - a mailing list management system
 #
-# Copyright (C) 1998 Tommi Virtanen
+# Copyright (C) 1998-2000 Tommi Virtanen
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,10 +28,10 @@ ETCDIR=$(DESTDIR)/etc/ezmanage
 CGIDIR=$(INSTDIR)/cgi
 PUBCGIDIR=$(INSTDIR)/publiccgi
 LIBDIR=$(INSTDIR)/lib
-
-DOCDIR=$(DESTDIR)$(PREFIX)/doc/ezmanage
 BINDIR=$(DESTDIR)$(PREFIX)/bin
-MANDIR=$(DESTDIR)$(PREFIX)/man/man1
+SHAREDIR=$(DESTDIR)$(PREFIX)/share
+DOCDIR=$(SHAREDIR)/doc/ezmanage
+MANDIR=$(SHAREDIR)/man/man1
 
 LIBFILES=lib/Mail/Ezmanage/Fullnames.pm lib/Mail/Ezmanage/Mod.pm \
 	lib/Mail/Ezmlm/Maintenance.pm lib/Mail/Ezmanage.pm \
