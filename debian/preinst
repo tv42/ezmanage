@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "x$1" = "xupgrade" -a \
+	! -d /etc/ezmanage -a -d /usr/lib/ezmanage/config ]; then
+	cp -ar /usr/lib/ezmanage/config /etc/ezmanage
+	rm -rf /usr/lib/ezmanage/config
+fi

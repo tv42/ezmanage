@@ -1,0 +1,17 @@
+Source: ezmanage
+Section: contrib/mail
+Priority: optional
+Maintainer: Tommi Virtanen <tv@debian.org>
+Standards-Version: 2.4.0.0
+
+Package: ezmanage
+Architecture: all
+Depends: perl5, ezmlm-idx (>=0.53-3.1), qmail, httpd, maildrop, mhonarc, mailtools
+Description: Manage multiple ezmlm mailing lists
+ Ezmanage provides a simple WWW interface to managing multiple ezmlm
+ mailing lists. It is designed to enable ISPs to provide their clients
+ with easily administratable mailing lists, to create a virtual domain
+ "lists.example.com" with mailing lists in it, etc.
+ .
+ Ezmanage is based on qmail and ezmlm-idx, and takes advantage of their
+ reliability and efficiency.

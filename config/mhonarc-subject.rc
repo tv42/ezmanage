@@ -1,0 +1,33 @@
+<!-- Example mhonarc-subject.rc file for ezmanage (-*-html-*-) -->
+
+<idxfname>
+subject.html
+</idxfname>
+<main>
+
+<subsort>
+
+<!-- Layout -->
+
+<SubjectBegin>
+<li>$SUBJECTNA$
+<ul>
+</SubjectBegin>
+
+<SubjectEnd>
+</li></ul>
+</SubjectEnd>
+
+<LITemplate>
+<LI><A $A_ATTR$>$FROMNAME$</a> <EM>&lt;<A HREF="mailto:$FROMADDR$">$FROMADDR$</A>&gt;</EM></LI>
+</LITemplate>
+
+<IdxPgBegin>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>$IDXTITLE$ (by subject)</TITLE>
+</HEAD>
+<BODY>
+<H1>$IDXTITLE$ (by subject)</H1>
+</IdxPgBegin>

@@ -1,0 +1,148 @@
+<!-- Example mhonarc.rc file for ezmanage (-*-html-*-) -->
+
+<nomain>
+<nothread>
+<folrefs>
+<nodoc>
+<nogzipfiles>
+<nogziplinks>
+
+<!-- if you want to modify the files pointed to here, just copy them to your config dir
+     and change the path here -->
+<otherindexes>
+/etc/ezmanage/mhonarc-date.rc
+/etc/ezmanage/mhonarc-subject.rc
+/etc/ezmanage/mhonarc-author.rc
+/etc/ezmanage/mhonarc-thread.rc
+</otherindexes>
+
+<!-- Common to both layouts -->
+
+<MsgLocalDateFmt>
+%B %d, %Y
+</MsgLocalDateFmt>
+
+<!-- Normal layout -->
+
+<IdxPgBegin>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>$IDXTITLE$</TITLE>
+</HEAD>
+<BODY>
+<H1>$IDXTITLE$</H1>
+</IdxPgBegin>
+
+<ListBegin>
+<P>Index by [<A HREF="author.html">author</A>|
+<A HREF="date.html">date</A>|
+<A HREF="subject.html">subject</A>|
+<A HREF="thread.html">thread</A>]
+
+<HR>
+<UL>
+</ListBegin>
+
+<ListEnd>
+</UL>
+<HR>
+<UL>
+<LI><A HREF="author.html">Author Index</A></LI>
+<LI><A HREF="date.html">Date Index</A></LI>
+<LI><A HREF="subject.html">Subject Index</A></LI>
+<LI><A HREF="thread.html">Thread Index</A></LI>
+</UL>
+</ListEnd>
+
+<LiTemplate>
+<LI>$SUBJECT$
+<UL><LI><EM>From</EM>: $FROM$</LI></UL>
+</LI>
+</LiTemplate>
+
+<IdxPgEnd>
+</BODY>
+</HTML>
+</IdxPgEnd>
+
+<!-- Thread layout -->
+
+<TIdxPgBegin>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>$TIDXTITLE$</TITLE>
+</HEAD>
+<BODY>
+<H1>$TIDXTITLE$</H1>
+</TIdxPgBegin>
+
+<THead>
+<P>Index by [<A HREF="author.html">author</A>|
+<A HREF="date.html">date</A>|
+<A HREF="subject.html">subject</A>|
+<A HREF="thread.html">thread</A>]
+
+<HR>
+<UL>
+</THead>
+
+<TTopBegin>
+<LI>$SUBJECT$,
+    $FROMNAME$ <EM>&lt;<A HREF="mailto:$FROMADDR$">$FROMADDR$</A>&gt;</EM>
+</TTopBegin>
+
+<TSubListBeg>
+<UL>
+</TSubListBeg>
+
+<TLiTxt>
+<LI>$SUBJECT$,
+    $FROMNAME$ <EM>&lt;<A HREF="mailto:$FROMADDR$">$FROMADDR$</A>&gt;</EM>
+</TLiTxt>
+
+<TLiEnd>
+</LI>
+</TLiEnd>
+
+<TLiNone>
+<LI><EM>Message not available</EM>
+</TLiNone>
+
+<TLiNoneEnd>
+</LI>
+</TLiNoneEnd>
+
+<TSubListEnd>
+</UL>
+</TSubListEnd>
+
+<TSubjectBeg>
+&lt;Possible follow-up(s)&gt;<BR>
+</TSubjectBeg>
+
+<TTopEnd>
+</LI>
+</TTopEnd>
+
+<TSingleTxt>
+<LI>$SUBJECT$,
+    $FROMNAME$ <EM>&lt;<A HREF="mailto:$FROMADDR$">$FROMADDR$</A>&gt;</EM>
+</TSingleTxt>
+
+<TFoot>
+</UL>
+<HR>
+<UL>
+<LI><A HREF="author.html">Author Index</A></LI>
+<LI><A HREF="date.html">Date Index</A></LI>
+<LI><A HREF="subject.html">Subject Index</A></LI>
+<LI><A HREF="thread.html">Thread Index</A></LI>
+</UL>
+</TFoot>
+
+<TIdxPgEnd>
+</BODY>
+</HTML>
+</TIdxPgEnd>

@@ -1,0 +1,33 @@
+<!-- Example mhonarc-author.rc file for ezmanage (-*-html-*-) -->
+
+<idxfname>
+author.html
+</idxfname>
+<main>
+
+<authsort>
+
+<!-- Layout -->
+
+<AuthorBegin>
+<LI>$FROMNAME$ &lt;<A HREF="mailto:$FROMADDR$">$FROMADDR$</A>&gt;
+<UL>
+</AuthorBegin>
+
+<AuthorEnd>
+</LI></UL>
+</AuthorEnd>
+
+<LITemplate>
+<LI>$SUBJECT$ <SMALL><EM>$MSGLOCALDATE$</EM></SMALL></LI>
+</LITemplate>
+
+<IdxPgBegin>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>$IDXTITLE$ (by author)</TITLE>
+</HEAD>
+<BODY>
+<H1>$IDXTITLE$ (by author)</H1>
+</IdxPgBegin>

@@ -1,0 +1,31 @@
+<!-- Hey Emacs, this is -*-html-*- -->
+<page>Ezmanage Documentation</page>
+    <p><small><i>$Id: ezmanage.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $</i></small>
+    <blockquote>
+      <p><small><i>Copyright (C) 1998 Tommi Virtanen</i></small>
+      <p><small><i>This information is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</i></small>
+      <p><small><i>This work is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</i></small>
+      <p><small><i>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</i></small>
+    </blockquote>
+    <hr>
+    <p><strong>Some definitions</strong>:
+    <ul>
+      <li><em>User</em> is a random person using the lists maintained with <strong>ezmanage</strong>.
+      <li><em>List owner</em> is the person who uses the WWW interface to administer the lists.
+      <li><em>Installer</em> is the person who prepares <strong>ezmanage</strong> for use on a particular site.
+      <li><em>Administrator</em> is the person who oversees the mail system and all <strong>ezmanage</strong> setups on the site.
+    </ul>
+    <h2>For the List Owner</h2>
+    <ul>
+      <li><a href="owner/interface.html">WWW Interface Documentation</a>
+      <li><a href="owner/faq.html">Frequently Asked (List Owner) Questions</a>
+    </ul>
+    <h2>For the Installer</h2>
+    <ul>
+      <li><a href="install/blurb.html">Why would you want to use <strong>ezmanage</strong></a>
+      <li><a href="install/quickstart.html">Quickstart</a> to installation
+    </ul>
+    <h2>For the Administrator</h2>
+    <ul>
+      <li><a href="admin/structure.html">Structure of <strong>ezmanage</strong></a>
+    </ul>

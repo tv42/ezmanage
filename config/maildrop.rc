@@ -1,0 +1,4 @@
+# Example maildrop.rc file for ezmanage
+SHELL=/bin/sh
+FILE="$1/"`date +%Y/%m`
+to $FILE

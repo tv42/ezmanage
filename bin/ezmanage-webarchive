@@ -1,0 +1,143 @@
+#!/usr/bin/perl -wT
+#
+# $Id: ezmanage-webarchive,v 1.1 2000/03/20 17:29:38 tv42 Exp $
+#
+# ezmanage-webarchive - update the html archive from mailbox archive
+#
+# Copyright (C) 1998 Tommi Virtanen
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+############################################################################
+
+=head1 NAME
+
+ezmanage-webarchive - update the html archive from mailbox archive
+
+=head1 SYNOPSIS
+
+  ezmanage-webarchive [-v|--verbose]
+
+=head1 DESCRIPTION
+
+B<ezmanage-webarchive> will go through all the lists managed by
+B<ezmanage>, and update archives stored in
+F<$HOME/.ezmanage/webarchive> (by default).
+
+Archives for the current month, last month, and last two months
+concatenated will be updated.
+
+It is suggested that every user who has B<ezmanage> lists run this
+once per night. A line such as
+
+  MAILTO=postmaster
+  00 04 * * * ezmanage-webarchive
+
+in the users crontab will do this (see L<crontab(5)> for more).
+
+=head1 AUTHOR
+
+Tommi Virtanen, Havoc Consulting (tv@havoc.fi)
+
+=cut
+
+############################################################################
+
+use lib '/usr/lib/ezmanage/lib';
+require Mail::Ezmanage;
+
+$ENV{PATH} = '/bin:/usr/bin';
+
+main(defined $ARGV[0] and $ARGV[0] =~ /^-v$|^--verbose$/);
+
+sub main($;) {
+  my ($verbose) = @_;
+  my $lists = Mail::Ezmanage::get_lists();
+  defined $lists 
+    or die Mail::Ezmanage::failure()
+      ? 'Fatal' : 'Transient',
+      'error while fetching list of lists; ', Mail::Ezmanage::error(), "\n";
+
+  my ($year, $month);
+  (undef,undef,undef,undef,$month,$year,undef,undef,undef)
+    = localtime();
+  defined $year and defined $month
+    or die "Cannot resolve current time; $!\n";
+  $year += 1900;
+  $month += 1;
+  $month = '0' . $month unless length($month)>1;
+
+  my $old_month = $month-1;
+  my $old_year = $year;
+  $old_year--, $old_month=12 if $old_month==0;
+  $old_month = '0' . $old_month unless length($old_month)>1;
+
+  foreach $list (@$lists) {
+    print "Updating archive for list $list\n" if $verbose;
+    my $desc = Mail::Ezmanage::get_list_description($list);
+    defined $desc
+      or warn(Mail::Ezmanage::failure()
+	      ? 'Fatal' : 'Transient',
+	      "error while fetching description for list $list; ", 
+	      Mail::Ezmanage::error(), "\n"),
+	next;
+    $desc ne ''
+      or $desc = Mail::Ezmanage::prettify('hp', $list);
+    defined $desc and $desc ne ''
+      or warn("Cannot get list description for list $list\n"),
+      next;
+
+    ensure_dir($Mail::Ezmanage::EZWEBARCHIVE, "/$list");
+    ensure_dir($Mail::Ezmanage::EZWEBARCHIVE, "/$list/current");
+    run_mhonarc($desc, $list, 'current', qw(last current));
+
+    ensure_dir($Mail::Ezmanage::EZWEBARCHIVE, "/$list/$year");
+    ensure_dir($Mail::Ezmanage::EZWEBARCHIVE, "/$list/$year/$month");
+    run_mhonarc($desc, $list, "$year/$month", "$year/$month");
+
+    # Update last month also, in case there are new messages arrived
+    # between last run and month change.
+    ensure_dir($Mail::Ezmanage::EZWEBARCHIVE, "/$list/$old_year");
+    ensure_dir($Mail::Ezmanage::EZWEBARCHIVE, "/$list/$old_year/$old_month");
+    run_mhonarc($desc, $list, "$old_year/$old_month", "$old_year/$old_month");
+  }
+}
+
+sub run_mhonarc($$$@) {
+  my ($title, $list, $archdir, @indirs) = @_;
+  # I know they are not typos, stop complaining.
+  $Mail::Ezmanage::EZARCHIVE or 1;
+  $Mail::Ezmanage::EZCONFDIR or 1;
+
+  system('mhonarc', 
+	 '-title' => $title,
+	 '-rcfile' => $Mail::Ezmanage::EZCONFDIR . '/mhonarc.rc',
+	 '-add',
+	 '-quiet',
+	 '-outdir' => $Mail::Ezmanage::EZWEBARCHIVE . "/$list/$archdir",
+	 map { $Mail::Ezmanage::EZARCHIVE . "/$list/" . $_ } @indirs)
+    == 0 or warn("Mhonarc failed for list $list/$archdir; $!\n");
+}
+
+sub ensure_dir($@) {
+  my ($trusted, @untrusted) = @_;
+  foreach (@untrusted) {
+    tr/\./:/;
+    ($_) = /(.*)/;
+  }
+  my $dir = $trusted . "@untrusted";
+  -d $dir or mkdir $dir, 0755
+    or die "Cannot create archive directory $dir; $!\n";
+}

@@ -1,0 +1,151 @@
+## -*- html -*-
+#
+# $Id: template.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $
+
+# Template for generating the ezmanage documentation.
+# Copyright (C) 1998 Tommi Virtanen
+
+# This information is free; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This work is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+
+#####################################################################
+
+#use wml::std::info
+#use wml::std::toc
+#use wml::fmt::url
+
+<define-container contents>
+<h1>%xbody</h1>
+<toc>
+</define-container>
+
+<define-container definition>
+<preserve name>
+<preserve abbrev>
+<preserve creator>
+<set-var %attributes>
+  <p><em><get-var name></em> \
+<if <get-var abbrev> "(<strong><get-var abbrev></strong>)"> \
+<if <get-var creator> "<tt>(<get-var creator>)</tt>">
+  <br>%xbody
+<restore creator>
+<restore abbrev>
+<restore name>
+</define-container>
+
+[TODO::]
+<define-container todo>
+[TODO:
+<preserve title>
+<set-var %attributes>
+<br clear="right">
+<table align="right" width="30%" border="1">
+<tr><th><if "<get-var title>"
+	"<get-var title>"
+	"TODO"
+    >
+<tr><td><font color="#b00000" size="1">
+<:= join "\n<br>", split "\n", %qbody :>
+</font>
+</table>
+<restore title>
+:]
+</define-container>
+
+[THINK::]
+<define-container think>
+[THINK:
+<preserve title>
+<set-var %attributes>
+<br clear="right">
+<table align="right" width="30%" border="1">
+<tr><th><if "<get-var title>"
+	"<get-var title>"
+	"THINK"
+    >
+<tr><td><font color="#00b000" size="1">
+<:= join "\n<br>", split "\n", %qbody :>
+</font>
+</table>
+<restore title>
+:]
+</define-container>
+
+<define-container question>
+<p><strong><big>Q:</big> %body</strong>
+</define-container>
+
+<define-container answer>
+<p><strong><big>A:</big> %body</strong>
+</define-container>
+
+[PAGE_HEAD:\
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+	"http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- This file is automatically created, do not edit -->
+  <<PAGE_TITLE>>
+  <info style=meta copyright="Tommi Virtanen, Havoc Consulting" Author="Tommi Virtanen, tv@havoc.fi">
+  <<PAGE_HEAD>>
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#9f0000" vlink="#602080" alink="#000090">
+
+<h1><<PAGE_TITLETEXT>></h1>
+        <!-- BEGIN OF ACTUAL PAGE CONTENTS -->
+        :PAGE_HEAD]
+        [PAGE_BODY:
+        <<PAGE_BODY>>
+        :PAGE_BODY]
+        [PAGE_FOOT:
+        <!-- END OF ACTUAL PAGE CONTENTS -->
+
+<p style="text-align: right;"><small>
+Comments to <i><a href="mailto:Tommi.Virtanen@havoc.fi">Tommi.Virtanen@havoc.fi</a></i>.
+</small>
+
+</body>
+</html>
+
+:PAGE_FOOT]
+
+##
+##  fill the skeleton with the default contents
+##
+
+..!PAGE_TITLETEXT!>>
+Unknown Page
+<<..
+
+..!PAGE_TITLE!>>
+<title><<PAGE_TITLETEXT>></title>
+<<..
+
+##
+##  setup commands to fill the skeleton
+##
+
+#   fill PAGE_TITLE
+<define-container page>
+..PAGE_TITLETEXT>>%xbody<<..
+..PAGE_TITLE>><title %attributes>%xbody</title><<..
+</define-container>
+
+##
+##  finally enter the body
+##
+
+..PAGE_BODY>>

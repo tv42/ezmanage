@@ -1,0 +1,10 @@
+etc/ezmanage
+usr/bin
+usr/man/man1
+usr/lib/ezmanage
+usr/lib/ezmanage/cgi
+usr/lib/ezmanage/publiccgi
+usr/lib/ezmanage/lib
+usr/lib/ezmanage/lib/Mail
+usr/lib/ezmanage/lib/Mail/Ezmanage
+usr/lib/ezmanage/lib/Mail/Ezmlm

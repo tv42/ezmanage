@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+#
+# $Id: rules,v 1.1 2000/03/20 17:29:39 tv42 Exp $
+#
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	make
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	-make clean
+	dh_clean
+
+binary-indep: build
+
+binary-arch: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	make install DESTDIR=`pwd`/debian/tmp
+	dh_installdocs
+	dh_undocumented ezmanage-archive.1
+	dh_installchangelogs
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary

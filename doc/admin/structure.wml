@@ -1,0 +1,77 @@
+<!-- Hey Emacs, this is -*-html-*- -->
+<page>Ezmanage Administrator Documentation: Structure of ezmanage</page>
+    <p><small><i>$Id: structure.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $</i></small>
+    <blockquote>
+      <p><small><i>Copyright (C) 1998 Tommi Virtanen</i></small>
+      <p><small><i>This information is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</i></small>
+      <p><small><i>This work is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</i></small>
+      <p><small><i>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</i></small>
+    </blockquote>
+    <hr>
+    <contents>Table of Contents</contents>
+    
+    <h2>Programs and scripts in the package</h2>
+    <ol>
+      <li>Programs
+	<ul>
+	  <li><em>ezmanage-skeleton</em>: create a per-user <em>$HOME/.ezmanage</em> directory, set up listowner alias and <em>.ezmlmrc</em> (run by hand)
+	  <li><em>ezmanage-webarchive</em>: update the HTML message archive (from cron)
+	  <li><em>ezmanage-archive</em>: save an incoming message to the mailbox archive (run from lists .qmail)
+	  <li><em>ezmanage-fullnames-maintenance</em>: clean the fullnames database (from cron)
+	</ul>
+      <li>CGI-scripts
+	<ul>
+	  <li><em>ezmanage-menu.cgi</em>: main menu for all ezmanage functions
+	  <li><em>ezmanage-websub.cgi</em>: public subscription/unsubscription frontend
+	  <li><em>ezmanage-group-config.cgi</em>: moderator group configuration
+	  <li><em>ezmanage-group-new.cgi</em>: create a new moderator group
+	  <li><em>ezmanage-list-config.cgi</em>: configure a list
+	  <li><em>ezmanage-list-new.cgi</em>: create a new list
+	  <li><em>ezmanage-list-remove.cgi</em>: remove a list
+	  <li><em>ezmanage-list-subscribers.cgi</em>: administer list subscribers
+	</ul>
+    </ol>
+
+    <h2>Structure of the <em>.ezmanage</em>-directory</h2>
+    <p>Contents of the directory <em>$HOME/.ezmanage</em>
+    <ul>
+      <li><em>config</em>: configuration files
+	<ul>
+	  <li><em>dotqmail</em>: prefix where the <em>.qmail</em>-files controlling the lists are
+	  <li><em>prefix</em>: prefix for the list addresses
+	  <li><em>hostname</em>: domain name for the list addresses
+	  <li><em>maildrop.rc</em>: maildrop recipe for archiving messages
+	  <li><em>mhonarc.rc</em>: mhonarc configuration file for the HTML archive
+	</ul>
+      <li><em>mods</em>: moderator groups
+	<ul>
+	  <li><em>moderator group name</em>: a bare-bones ezmlm-directory structure. See <strong>ezmlm(5)</strong>.
+	</ul>
+      <li><em>archive</em>: mailbox format archive
+	<ul>
+	  <li><em>listname</em>
+	    <ul>
+	      <li><em>YYYY</em>
+		<ul>
+		  <li><em>MM</em>: mailbox containing all messages to <em>listname</em> sent in the <em>MM</em>th month of year <em>YYYY</em>.
+		</ul>
+	      <li><em>current</em>: symbolic link to the mailbox of the current month
+	      <li><em>last</em>: symbolic link to the mailbox of the last month
+	    </ul>
+	</ul>
+      <li><em>webarchive</em>
+	<ul>
+	  <li><em>listname</em>
+	    <ul>
+	      <li><em>YYYY</em>
+		<ul>
+		  <li><em>MM</em>: directory containing the list archive for month <em>MM</em> year <em>YYYY</em>.
+		</ul>
+	      <li><em>current</em>: directory containing the list archive for <em>last</em> and <em>current</em> combined.
+	    </ul>
+	</ul>
+      <li><em>lists</em>
+	<ul>
+	  <li><em>listname</em>: ezmlm directory containing the list. See <strong>ezmlm(5)</strong>.
+	</ul>
+    </ul>

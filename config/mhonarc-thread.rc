@@ -1,0 +1,22 @@
+<!-- Example mhonarc-thread.rc file for ezmanage (-*-html-*-) -->
+
+<tidxfname>
+thread.html
+</tidxfname>
+<thread>
+
+<tsubsort>
+<!-- tsort, tsubsort or nothing? -->
+
+<!-- Layout -->
+
+<!-- note that is IDXTITLE, not TIDXTITLE -->
+<TIdxPgBegin>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>$IDXTITLE$ (by thread)</TITLE>
+</HEAD>
+<BODY>
+<H1>$IDXTITLE$ (by thread)</H1>
+</TIdxPgBegin>

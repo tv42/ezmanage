@@ -1,0 +1,86 @@
+<!-- Hey Emacs, this is -*-html-*- -->
+<page>Ezmanage Owner Documentation: WWW Interface</page>
+    <p><small><i>$Id: interface.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $</i></small>
+    <blockquote>
+      <p><small><i>Copyright (C) 1998 Tommi Virtanen</i></small>
+      <p><small><i>This information is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</i></small>
+      <p><small><i>This work is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</i></small>
+      <p><small><i>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</i></small>
+    </blockquote>
+    <hr>
+
+    <p>This document outlines the <strong>ezmanage</strong> WWW interface, and tries to provide sufficient online help.
+      
+    <h2><a name="menu">Ezmanage Main Menu</a></h2>
+    <div>
+      <p><strong>Ezmanage</strong> main menu is divided into two sections:
+	<a href="#list">lists</a> and <a href="#group">moderator groups</a>.
+      <p>By clicking on a list name or a moderator group name from the list, you can go to <a href="#list-config">list</a> or <a href="#group-config">moderator group configuration</a>.
+      <p>By typing in a name and clicking <a href="#list-new">New list</a> or <a href="#group-new">New moderator group</a> you can go <a href="#list-new">create a new list</a> or <a href="#group-new">moderator group</a>.
+    </div>
+    <h2><a name="list">List Management</a></h2>
+    <div>
+      <h3><a name="list-config">Configuring a List</a></h3>
+      <div>
+	<p>The list configuration menu is divided into four distinct parts: at the top is a button to <a href="#list-subscribers">administer list subscribers</a>, and below that, separated by horizontal lines
+	<ul>
+	  <li>A textfield to change the list description. The description should be a one-line explanatory message about the purpose of the list.
+	  <li>A textfield to change the maximum size of a message allowed on the list, in bytes. Use 0 (zero) to disable.
+	  <li>Message moderation settings: select
+	    <ul>
+	      <li><strong>"All"</strong> to allow all messages to the list (normal discussion list)
+	      <li><strong>"Subscribers"</strong> to only allow messages where the sender address is a subscriber of the list.
+	      <li><strong>"Non-subscriber's posts moderated"</strong> to allow messages where the sender address is a subscriber of the list, and moderate all other messages (normal discussion list that wishes to avoid too much traffic or spam - requires more work from the moderator)
+	      <li><strong>"All moderated"</strong> to send messages to the list only after moderation (use for announcement lists)
+	    </ul>
+	    <br>Select the moderator group you wish to use for moderating the messages.
+	  <li>Subscription settings: select
+	    <ul>
+	      <li><strong>"For anyone"</strong> to allow public subscription/unsubscription.
+	      <li><strong>"Only after moderation"</strong> to make all subscription/unsubscription requests be moderated.
+	    </ul>
+	    <br>Select the moderator group you wish to use for moderating the subscription requests.
+	</ul>
+	<p>Click an individual sections <strong>Save</strong>-button to save changes in that section, or <strong>Save All</strong> at the bottom to save all changes.
+	<p>Click <strong>Remove this list</strong> to <a href="#list-remove">remove the list</a>.
+      </div>
+      <h3><a name="list-subscribers">Administering Subscribers of a List</a></h3>
+      <div>
+	<p>The screen is divided into two: current user and the list of all subscribers.
+	<p>Type an address to the <strong>User</strong> field and press <strong>Add</strong> or <strong>Remove</strong> to subscribe/unsubscribe that address to the list. If <strong>Confirm action with user</strong> is checked, the user will be sent a confirmation request for the action.
+	<p>Type an address to the <strong>Change to</strong> field and press <strong>Change</strong> to change the current subscriber address in <strong>User</strong> to the one in <strong>Change to</strong>.
+	<p>Type a full name (first and last name) of the address in <strong>User</strong> in <strong>Full name</strong> and press <strong>Use full name</strong> to save the users full name.
+	<p>You can save time by choosing an address from the list at the bottom, instead of typing it in. You can search through the list with your browsers search function. The list may be refreshed by choosing <strong>Refresh</strong>. You do not have to wait for the list do load to start using the form.
+      </div>
+      <h3><a name="list-new">Creating a New List</a></h3>
+      <div>
+	<p>If you typed a name for the new list and chose <strong>New list</strong> at the <a href="#menu">main menu</a>, list creation should just give you a success report and give you link to <a href="#list-config">list configuration</a>.
+	<p>If something went wrong you will be shown an error message, and given a chance to retry. If you didn't enter a list name earlier, you will be prompted for it now.
+      </div>
+      <h3><a name="list-remove">Removing a List</a></h3>
+      <div>
+	<p>If you chose <strong>Remove this list</strong> at the <a href="#list-config">list configuration</a>, you will be asked confirmation. Choose <strong>Remove</strong> to actually remove the list.
+	<p>If you arrived to list removal some other way, or the list removal didn't succeed, you will be asked for the list name. After choosing a list to remove, you will get the confirmation dialog mentioned above.
+      </div>
+    </div>
+    <h2><a name="group">Moderator Group Management</a></h2>
+    <div>
+      <h3><a name="group-config">Configuring a Moderator Group</a></h3>
+      <div>
+	<p>The screen is divided into two: adding new moderators and removing old moderators.
+	<p>Type email addresses (addresses only, no names) <strong>one per line</strong> in the text area at the top, and choose <strong>Ok</strong> add those addresses to the moderator group.
+	<p>Check the addresses you wish to remove from the list at the bottom, and choose <strong>Ok</strong> at the bottom of the screen to remove them from the moderator group.
+	<p><strong>Note:</strong> you cannot remove the <em>prefix-</em>listmaster@<em>host</em> address from the <em>default</em> moderator group - that ensures at least one moderator is always available (having a moderated mailing list with no moderators will silently discard all messages).
+	<p>To remove a moderator group, remove all moderators in the group and choose <strong>Remove</strong>. Obviously, you cannot remove the moderator group <em>default</em>.
+      </div>
+      <h3><a name="group-new">Creating a New Moderator Group</a></h3>
+      <div>
+	<p>If you typed a name for the new moderator group and chose <strong>New moderator group</strong> at the <a href="#menu">main menu</a>, group creation should just give you a success report and give you link to <a href="#group-config">moderator group configuration</a>.
+	<p>If something went wrong you will be shown an error message, and given a chance to retry. If you didn't enter a group name earlier, you will be prompted for it now.
+      </div>
+      <h3><a name="group-remove">Removing a Moderator Group</a></h3>
+      <div>
+	<p>Use <a href="#group-config">moderator group configuration</a> to remove all moderators in the group, and then choose <strong>Remove</strong>.
+	<p>You cannot remove the moderator group <em>default</em>.
+      </div>
+    </div>

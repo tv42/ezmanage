@@ -1,0 +1,34 @@
+<!-- Example mhonarc-date.rc file for ezmanage (-*-html-*-) -->
+
+<idxfname>
+date.html
+</idxfname>
+<main>
+
+<sort>
+
+<!-- LayOut -->
+
+<DayBegin>
+<LI>$MSGLOCALDATE$
+<UL>
+</DayBegin>
+
+<DayEnd>
+</LI></UL>
+</DayEnd>
+
+<LITemplate>
+<LI>$SUBJECT$, 
+    $FROMNAME$ <EM>&lt;<A HREF="mailto:$FROMADDR$">$FROMADDR$</A>&gt;</EM></LI>
+</LITemplate>
+
+<IdxPgBegin>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>$IDXTITLE$ (by date)</TITLE>
+</HEAD>
+<BODY>
+<H1>$IDXTITLE$ (by date)</H1>
+</IdxPgBegin>

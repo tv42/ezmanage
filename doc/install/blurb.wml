@@ -1,0 +1,18 @@
+<!-- Hey Emacs, this is -*-html-*- -->
+<page>Ezmanage Owner Documentation: Why ezmanage?</page>
+    <p><small><i>$Id: blurb.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $</i></small>
+    <blockquote>
+      <p><small><i>Copyright (C) 1998 Tommi Virtanen</i></small>
+      <p><small><i>This information is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</i></small>
+      <p><small><i>This work is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</i></small>
+      <p><small><i>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</i></small>
+    </blockquote>
+    <hr>
+    <p><strong>ezmanage</strong> is a secure, reasonably reliable, simple mailing list management system. It provides a simple WWW interface to managing multiple ezmlm mailing lists. It is designed to enable ISPs to provide their clients with easily administratable mailing lists, to create a virtual domain "lists.example.com" with mailing lists in it, etc.
+    <p>Ezmanage is based on <a href="http://www.qmail.org/">qmail</a> and <a href="http://www.ezmlm.org/">ezmlm-idx</a>, and takes advantage of their reliability and efficiency.
+    <p><strong>Reliable:</strong> <strong>ezmanage</strong> falls back on <strong>ezmlm</strong>s and <strong>qmail</strong>s reliability.
+    <p><strong>Efficient:</strong> <strong>ezmlm</strong> and <strong>qmail</strong> are very efficient in mailing list use. <strong>Ezmanage</strong> relies totally on <strong>ezmlm-idx</strong> for mailing list functions, the only additional overhead is archiving messages in mailbox format for the HTML archive.
+    <p><strong>Simple:</strong> <strong>ezmanage</strong> is just a bunch of CGI scripts and cron jobs. The largest source file, the list configuration CGI interface, is under 600 lines.
+    <p><strong>Extendible:</strong> it's all perl (and one shell script). You can modify them to suit local needs.
+    <p><strong>Suitable for security partitioning:</strong> <strong>ezmanage</strong> is designed so you can delegate a portion of your address space to a special user id, and let that id handle your lists.
+    <p><strong>Suitable for ISP use:</strong> provide a simple (possibly CGI) wrapper for <strong>ezmanage-skeleton</strong>, and have your users run their own mailing lists.

@@ -1,0 +1,344 @@
+#!/usr/bin/perl -w
+#
+# $Id: ezmanage-skeleton,v 1.1 2000/03/20 17:29:38 tv42 Exp $
+#
+# ezmanage-skeleton - prepare to use ezmanage
+#
+# Copyright (C) 1998 Tommi Virtanen
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+############################################################################
+
+=head1 NAME
+
+ezmanage-skeleton - prepare to use ezmanage
+
+=head1 SYNOPSIS
+
+  ezmanage-skeleton I<listmasteraddress>
+
+=head1 DESCRIPTION
+
+B<ezmanage-skeleton> prepares B<ezmanage> for the current user. It
+creates F<$HOME/.ezmanage> (by default) to hold all the information
+B<ezmanage> needs for the current user - configuration, lists, message
+archives, etc. It also creates F<$HOME/.qmail-listmaster> (by default)
+to forward all mail to owner of any list to the address specified as
+the first argument.
+
+=head1 ENVIRONMENT VARIABLES
+
+=over 4
+
+=item HOME
+
+Home directory of the current user. Default taken from F</etc/passwd>.
+
+=item EZMANAGEDIR
+
+Where most of the files will be stored. Default F<$HOME/.ezmanage>
+
+=item EZCONFDIR
+
+Config file location. Default F<$EZMANAGEDIR/config>
+
+=item EZMODSDIR
+
+Moderator groups location. Default F<$EZMANAGEDIR/mods>
+
+=item EZARCHIVE
+
+Where the mailbox-format archive will be kept. Default F<$EZMANAGEDIR/archive>
+
+=item EZWEBARCHIVE
+
+Where the HTML-format archive will be kept. Default F<$EZMANAGEDIR/webarchive>
+
+=item EZLISTS
+
+Ezmlm list directories location. Default F<$EZMANAGEDIR/lists>
+
+=item EZDOTQMAIL
+
+Where the F<.qmail>-files controlling the list addresses are
+located. Default F<$HOME/.qmail->
+
+=item EZPREFIX
+
+Prefix for the list email addresses. For instance, if I<EZDOTQMAIL> is
+F<$HOME/.qmail-lists->, then EZPREFIX would propably be
+B<user-lists->, where I<user> is the name of the user who owns the
+lists. Defaults to B<$QMAILUSER->, or B<$MAILUSER->, or B<user->
+(where user is the current username).
+
+=item EZHOST
+
+Host that runs the lists. If running under a virtual domain, set this
+to be the virtual domain. Defaults to B<$QMAILHOST>, or B<$MAILHOST>,
+or whatever C<hostname --fqdn> gives.
+
+=back
+
+=head1 EXAMPLE USAGE
+
+=head2 Lists at user-lists/listname@example.com
+
+  $ mkdir $HOME/.qmail-lists
+  $ EZPREFIX=user-lists/ EZDOTQMAIL=$HOME/.qmail-lists/ \
+    ezmanage-skeleton user@example.com
+
+(last line is split here for cosmetic reasons)
+
+=head2 Lists at listname@lists.example.com (virtualdomain), run by alias
+
+  $ su alias
+  $ EZMANAGEDIR=/var/qmail/alias/lists
+  $ EZDOTQMAIL=/var/qmail/alias/.qmail-lists-
+  $ EZPREFIX=''
+  $ EZHOST=lists.example.com
+  $ export EZMANAGEDIR EZDOTQMAIL EZPREFIX EZHOST
+  $ ezmanage-skeleton postmaster@example.com
+  $ exit
+  $ su
+  # echo lists.example.com:alias-lists >>/var/qmail/control/virtualdomains
+  # killall -HUP qmail-send
+
+=head2 Lists at listname@lists.example.com (virtualdomain), run by a special user
+
+  $ su
+  # adduser --system lists
+  # exit
+  $ su lists
+  $ echo '&postmaster@example.com' >~lists/.qmail
+  $ EZPREFIX=''
+  $ EZHOST=lists.example.com
+  $ export EZPREFIX EZHOST
+  $ ezmanage-skeleton postmaster@example.com
+  $ exit
+  $ su
+  # echo lists.example.com:lists >>/var/qmail/control/virtualdomains
+  # killall -HUP qmail-send
+
+=head1 AUTHOR
+
+Tommi Virtanen, Havoc Consulting (tv@havoc.fi)
+
+=cut
+
+############################################################################
+
+use strict;
+use lib '/usr/lib/ezmanage/lib';
+use Mail::Ezmlm;
+use File::Copy;
+use File::Basename;
+
+main($ARGV[0]);
+
+sub main($;) {
+  my ($listmaster) = @_;
+  if (not defined $listmaster or $listmaster eq '') {
+    print "You must provide the listmaster ",
+    "email address on the command line.\n";
+    exit 1;
+  }
+  if ($listmaster =~ /\n/) {
+    print "Listmaster address must not contain newlines.\n";
+    exit 1;
+  }
+
+  my $home = $ENV{HOME} || (getpwuid($<))[7]
+    || die 'userid ', $<, ' not found in passwd, exiting';
+  my $listdir = $ENV{EZMANAGEDIR} || $home  . '/.ezmanage';
+  my $confdir = $ENV{EZCONFDIR} || $listdir . '/config';
+  my $modsdir = $ENV{EZMODSDIR} || $listdir . '/mods';
+  my $archive = $ENV{EZARCHIVE} || $listdir . '/archive';
+  my $webarchive = $ENV{EZWEBARCHIVE} || $listdir . '/webarchive';
+  my $lists = $ENV{EZLISTS} || $listdir . '/lists';
+  my $dotqmail = $ENV{EZDOTQMAIL}
+  || $home . '/.qmail-';
+
+  my $defmod = $modsdir . '/default';
+  my $defmodsub = $defmod . '/subscribers';
+  
+  my $p_pwuid=getpwuid($<);
+  $p_pwuid.='-' if defined $p_pwuid;
+  my $p_qmailuser=$ENV{QMAILUSER};
+  $p_qmailuser.='-' if defined $p_qmailuser;
+  my $p_mailuser=$ENV{MAILUSER};
+  $p_mailuser.='-' if defined $p_mailuser;
+  
+  my $prefix = $ENV{EZPREFIX};
+  unless (defined $prefix) {
+    $prefix = $p_qmailuser
+      || $p_mailuser
+	|| $p_pwuid
+	  || die "user id $< not found";
+    $prefix .= '-';
+  }
+
+  $ENV{PATH} = '/bin:/usr/bin';
+  my $host = $ENV{EZHOST}
+  || $ENV{QMAILHOST}
+  || $ENV{MAILHOST}
+  || `hostname --fqdn`
+    || die 'cannot determine hostname';
+  chomp $host;
+
+  dirs($listdir, $confdir, $modsdir, $lists, $defmod, $defmodsub, 
+       $archive, $webarchive)
+    or exit 1;
+  files($confdir . '/dotqmail', $dotqmail)
+    or clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+    		  $modsdir, $lists, $listdir),
+    exit 1;
+  files($confdir . '/prefix', $prefix)
+    or clean_files($confdir . '/dotqmail'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+  files($confdir . '/hostname', $host)
+    or clean_files($confdir . '/dotqmail', $confdir . '/prefix'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+  files($dotqmail . 'listmaster', '&' . $listmaster)
+    or clean_files($confdir . '/dotqmail', $confdir . '/prefix', 
+		   $confdir . '/hostname'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+
+  my $global_config = '/etc/ezmanage';
+  copy_file($global_config . '/maildrop.rc', $confdir . '/maildrop.rc')
+    or clean_files($confdir . '/maildrop.rc', $confdir . '/dotqmail', 
+                   $confdir . '/prefix', $confdir . '/hostname'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+  mode(0600, $confdir . '/maildrop.rc')
+    or clean_files($confdir . '/maildrop.rc', $confdir . '/dotqmail', 
+                   $confdir . '/prefix', $confdir . '/hostname'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+  copy_file($global_config . '/mhonarc.rc', $confdir . '/mhonarc.rc')
+    or clean_files($confdir . '/mhonarc.rc', $confdir . '/maildrop.rc',
+    		   $confdir . '/dotqmail', $confdir . '/prefix', 
+		   $confdir . '/hostname'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+
+  my $dirname = (fileparse($dotqmail))[1];
+  defined $dirname and $dirname ne ''
+    or print("cannot figure out location of dot-qmail files\n"),
+    clean_files($confdir . '/mhonarc.rc', $confdir . '/maildrop.rc',
+    		$confdir . '/dotqmail', $confdir . '/prefix', 
+		$confdir . '/hostname'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+  $dirname =~ s{/+$}{};
+  copy_file($global_config . '/dot-ezmlmrc', $dirname . '/.ezmlmrc')
+    or clean_files($confdir . '/mhonarc.rc', $confdir . '/maildrop.rc',
+    		   $confdir . '/dotqmail', $confdir . '/prefix', 
+		   $confdir . '/hostname'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+
+  Mail::Ezmlm::subscribe($defmod, $prefix . 'listmaster@' . $host)
+    or clean_files($confdir . '/dotqmail', $confdir . '/prefix',
+		   $confdir . '/hostname', $dotqmail . 'listmaster'),
+    clean_dirs($webarchive, $archive, $defmodsub, $defmod, $confdir,
+               $modsdir, $lists, $listdir),
+    exit 1;
+  print "done.\n",
+  exit 0;
+}
+
+sub dirs(@) {
+  my $fail;
+  my @todo = @_;
+  my @done;
+  while ((@todo) and not $fail) {
+    print "creating dir $todo[0]: ";
+    mkdir $todo[0], 0755
+      and  print("ok.\n"), push(@done, shift @todo)
+	or print("cannot create $todo[0]; $!\n"), $fail++;
+  }
+  if ($fail) { clean_dirs(@done); return 0; }
+  return 1;
+}
+
+sub files($$) {
+  my ($file, $line) = @_;
+  print "creating file $file: ";
+  open FILE, '>' . $file
+    or print("cannot open $file for writing; $!\n"),
+    return 0;
+  print FILE $line, "\n"
+    or print("cannot write to $file; $!\n"),
+    close(FILE),
+    clean_files($file),
+    return 0;
+  close FILE
+    or print("error while closing $file; $!\n"),
+    clean_files($file),
+    return 0;
+  print "ok.\n";
+  return 1;
+}
+
+sub copy_file($$;) {
+  my ($from, $to) = @_;
+  print "copying file $from to $to: ";
+  print("file exists\n"), return 0 
+    if -e $to;
+  copy($from, $to)
+    or print("failed; $!\n"),
+    clean_files($to),
+    return 0;
+  print "ok.\n";
+  return 1;
+}
+
+sub mode($@) {
+  my ($mode) = shift;
+  foreach (@_) {
+    print "changing mode of file $_ to ", sprintf("%o", $mode), ": ";
+    chmod($mode, $_) or print("failure; $!\n"), return 0;
+    print "ok.\n";
+  }
+  return 1;
+}
+
+sub clean_files(@) {
+  foreach (@_) {
+    print "cleaning file $_: ",
+    unlink($_) ? 'ok' : "failure; $!",
+    ".\n";
+  }
+}
+
+sub clean_dirs(@) {
+  foreach (@_) {
+    print "cleaning dir $_: ",
+    rmdir($_) ? 'ok' : "failure; $!",
+    ".\n";
+  }
+}

@@ -1,0 +1,39 @@
+<!-- Hey Emacs, this is -*-html-*- -->
+<page>Ezmanage Installation Documentation: Quickstart</page>
+    <p><small><i>$Id: quickstart.wml,v 1.1 2000/03/20 17:29:39 tv42 Exp $</i></small>
+    <blockquote>
+      <p><small><i>Copyright (C) 1998 Tommi Virtanen</i></small>
+      <p><small><i>This information is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</i></small>
+      <p><small><i>This work is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</i></small>
+      <p><small><i>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</i></small>
+    </blockquote>
+    <hr>
+
+    <h2>Installation for Debian GNU/Linux platforms</h2>
+    <ol>
+      <li>Install the ezmanage Debian package (<tt>ezmanage_<em>n.n</em>.deb</tt>), and all packages it depends on.
+      <li>Configure your WWW server to handle requests to your chosen address as your chosen user (for Apache, see <strong>suexec</strong>). I suggest you use http://lists.example.com/ for lists located at listname@lists.example.com, and http://www.example.com/~user/lists/ for lists located at user-lists-listname@example.com.
+	<br><strong>Note:</strong> Anyone who can access these CGI-scripts can do anything they like with your lists - you wouldn't want to provide spam services to unknown people, would you? Heavy use of SSL, IP-based restrictions and firewalling are suggested.
+      <li>Run (or create suitable wrappers for later use by list owners)
+	<br><tt>
+	  $ EZDOTQMAIL=~/.qmail-lists- EZPREFIX=user-lists- ./ezmanage-skeleton user@example.com
+	</tt>
+	<br>for lists located at user-lists-listname@example.com, or
+	<br><tt>
+	  $ EZDOTQMAIL=~/.qmail- EZHOST=lists.example.com EZPREFIX='' ./ezmanage-skeleton postmaster@example.com
+	</tt>
+	<br>for lists located at listname@lists.example.com (in both cases, run the command as the user who will own the lists, and in the latter case, add <code>lists.example.com:user</code> in /var/qmail/control/virtualdomains).
+	<p>Reading the pod in ezmanage-skeleton might come handy (do <code>perldoc ezmanage-skeleton</code>).
+      <li>Check that ~/.ezmanage/config/* looks good.
+    </ol>
+    <h2>Using</h2>
+    <ol>
+      <li>Point your browser to the URL you configured in your WWW server.
+      <li>Type a name for a new list, press "New list".
+      <li>Configure your new list.
+    </ol>
+    <h2>Letting People Subscribe</h2>
+    <ul>
+      <li>The lists can be reached at <i>user</i>-lists-<i>listname</i>@<i>domain</i> (or, <i>listname</i>@<i>virtualdomain</i>, or some variation thereof), and they are just normal ezmlm-idx lists.
+      <li>You can let other access ezmanage-websub.cgi, and use a WWW interface to subscribe themselves to the list. All actions will be confirmed by mail, so it is as secure as native ezmlm-idx.
+    </ul>

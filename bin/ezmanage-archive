@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# $Id: ezmanage-archive,v 1.1 2000/03/20 17:29:38 tv42 Exp $
+#
+# ezmanage-archive - archive message from stdin to a directory
+#
+# Copyright (C) 1998 Tommi Virtanen
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+############################################################################
+
+set -e
+
+if [ "$1" = "" ]
+then
+	echo 'Usage: ezmanage-archive LISTNAME'
+	exit 0
+fi
+
+LIST="$(basename "$1")"
+
+if [ \! -d "$HOME/.ezmanage/archive/$LIST" ]
+then
+	echo 'ezmanage-archive: No such list'
+	exit 100
+fi
+
+[ -d "$HOME/.ezmanage/archive/$LIST/$(date +%Y)" ] \
+  || mkdir "$HOME/.ezmanage/archive/$LIST/$(date +%Y)" \
+    || { echo 'ezmanage-archive: Cannot create year'; exit 111; }
+
+ln -sf "$(date +%Y/%m)" "$HOME/.ezmanage/archive/$LIST/current" \
+  || { echo 'ezmanage-archive: Cannot update current month'; exit 111; }
+ln -sf "$(date +%Y/%m --date='now -1 month')" "$HOME/.ezmanage/archive/$LIST/last" \
+  || { echo 'ezmanage-archive: Cannot update last month'; exit 111; }
+
+# So that I failed execs don't make the shell exit with 127 - I want 111.
+# "|| true" in case the shell does not understand.
+shopt -s execfail || true
+
+exec maildrop "$HOME/.ezmanage/config/maildrop.rc" "$HOME/.ezmanage/archive/$LIST" \
+  || { echo 'ezmanage-archive: Cannot exec maildrop'; exit 111; }
+
+# Just in case
+echo 'ezmanage-archive: Exec failed'
+exit 111

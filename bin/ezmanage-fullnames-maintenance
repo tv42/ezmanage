@@ -1,0 +1,125 @@
+#!/usr/bin/perl -w
+#
+# $Id: ezmanage-fullnames-maintenance,v 1.1 2000/03/20 17:29:38 tv42 Exp $
+#
+# ezmanage-fullnames-maintenance - remove unnecessary full names
+#
+# Copyright (C) 1998 Tommi Virtanen
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+############################################################################
+
+=head1 NAME
+
+ezmanage-fullnames-maintenance - remove unnecessary full names
+
+=head1 SYNOPSIS
+
+  Called by a WWW server as a CGI script.
+
+=head1 DESCRIPTION
+
+B<ezmanage-fullnames-maintenance> will go through all the lists managed by
+B<ezmanage>, and clean the long names database stored in
+F<$HOME/.ezmanage/fullnames.db> (by default).
+
+The database contains mappings like I<address> => I<fullname>. All
+addresses that are not on any of the lists will be removed.
+
+It is suggested that every user who has B<ezmanage> lists run this
+once per week. An entry such as
+
+  MAILTO=postmaster
+  00 04 * * 0 ezmanage-webarchive
+
+in the users crontab will do this (see L<crontab(5)> for more).
+
+=head1 AUTHOR
+
+Tommi Virtanen, Havoc Consulting (tv@havoc.fi)
+
+=cut
+
+############################################################################
+
+use strict;
+use lib '/usr/lib/ezmanage/lib';
+require Mail::Ezmanage;
+require Mail::Ezmanage::Fullnames;
+require Mail::Ezmlm;
+
+sub bad($$$;) {
+  my ($text, $fail, $err) = @_;
+  print STDERR $0, ': ',
+  $fail ? 'fatal' : 'transient',
+  ' error ', $text, ': ', $err;
+  exit 1;
+}
+
+my $lists = Mail::Ezmanage::get_lists();
+defined $lists or 
+  bad "while fetching list of lists", 
+  Mail::Ezmanage::failure(), Mail::Ezmanage::error();
+my @dirs = map { $Mail::Ezmanage::EZLISTS . '/' . $_ } @$lists;
+undef $lists;
+
+my $fullnames = Mail::Ezmanage::Fullnames::open_hash();
+defined $fullnames or 
+  bad "while opening full names database",
+  Mail::Ezmanage::Fullnames::failure(), Mail::Ezmanage::Fullnames::error();
+
+exit 0 if not ref $fullnames and $fullnames == 0; # nonexistant
+
+my $addr;
+my $r;
+my @remove;
+
+while (($addr, undef) = each %$fullnames) {
+  $r = Mail::Ezmlm::is_subscriber_n($addr, @dirs);
+  defined $r or
+    bad "while checking subscribership of $addr",
+    Mail::Ezmlm::failure(), Mail::Ezmlm::error();
+  if (not $r) {
+    print "to be removed: $addr\n";
+    push @remove, $addr;
+  }
+}
+
+undef $fullnames;
+Mail::Ezmanage::Fullnames::close_hash() or
+  bad "while closing full names database",
+  Mail::Ezmanage::Fullnames::failure(), Mail::Ezmanage::Fullnames::error();
+
+exit 0 unless (@remove);
+
+print "removing unneeded full names.. ";
+Mail::Ezmanage::Fullnames::remove_name(@remove) or
+      bad "while removing full names",
+      Mail::Ezmanage::Fullnames::failure(), Mail::Ezmanage::Fullnames::error();
+print "done.\n";
+
+exit 0;
+
+# I know I use it only once, stop reminding me..
+$Mail::Ezmanage::EZLISTS or 1; 
+
+sub about() {
+  my ($n, $v) = ' $Id: ezmanage-fullnames-maintenance,v 1.1 2000/03/20 17:29:38 tv42 Exp $ ' =~ m{^.*?Id: (\S+) (\S+) .*};
+  $v='0.0' unless defined $v;
+  $n='unknown' unless defined $n;
+  $n =~ s/,v$//g;
+  return "$n v$v, Copyright 1998 Tommi Virtanen, Havoc Consulting.";
+}
