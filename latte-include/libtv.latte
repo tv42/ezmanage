@@ -1,0 +1,138 @@
+\; link to file and mention size
+{\def {\file \=name \=directory \&desc}
+  {\if {\not \directory}
+    {\set! \directory {\dirname \default={} \__FILE__}}}
+  {
+   {\url \file=\name \desc}
+   ({\round-sizes {\process-output perl -le 'print -s shift'
+                    {\concat \directory / \name}}})
+   }
+  }
+
+\; index of the rightmost occurrence of char in string
+{\def {\rindex \char \&string}
+  {\def {\worker \n}
+    {\if {\zero? \n}
+      0
+      {\if {\equal? {\apply \nth {\add -1 \n} \string} \char}
+        \n
+        {\worker {\add -1 \n}}}}}
+  {\worker {\apply \length \string}}}
+
+\; dirname of path; part before the last slash, '.' if no slash
+{\def {\dirname \file}
+  {\def \r {\rindex / \file}}
+  {\if {\zero? \r}
+    .
+    {\substr \file 0 {\add -1 \r}}}}
+
+\; basename of path; part after the last slash, all if no slash
+\; [not used currently]
+\;{\def {\basename \file}
+\;  {\def \r {\rindex / \file}}
+\;  {\if {\zero? \r}
+\;    \file
+\;    {\substr \file {\add 1 \r}}}}
+
+\; filter a list: this is the tail-recurse helper
+{\def {\grep-tailrec \part-of? \list \target}
+  {\if {\empty? \list}
+    \target
+    {\if {\funcall \part-of? {\car \list}}
+      {\grep-tailrec \part-of? {\cdr \list} 
+       {\append \target {\group {\car \list}}}}
+      {\grep-tailrec \part-of? {\cdr \list}  \target}}}}
+
+\; filter a list
+{\def {\grep \part-of? \&list}
+  {\grep-tailrec \part-of? \list {}}}
+
+\; invert to top index.html
+{\def {\invert-to-top-index \file}
+  {
+   {\lmap
+    {\lambda {} ../} 
+    {\grep
+     {\lambda {\item}
+      {\equal? \item /}}
+     {\explode {\dirname \file}}
+     }
+    }
+   \/index.html}}
+
+{\def {\url \=file \=href \&desc}
+  {\if {\not \desc}
+    {\if \href
+      {\url \href=\href \href}
+      {\url \file=\file \file}}
+    {\if \href
+      {{\apply \a \href=\href \desc}}
+      {{\a \href=\file \desc}}}}}
+
+\; nicer syntax for \hN, keeps text grouped with the header
+\; {\header 2 {title goes here}
+\; text..
+\; }
+{\def {\header \level \title \&text}
+  {
+   {\html <h}\level{\html >}\title{\html </h}\level{\html >}
+   \text
+   }
+  }
+
+{\def {\comment \&text}
+  {{\html \"<!-- \"}\text{\html \" -->\"}}}
+
+\; make text red and surround with invisible markers
+{\def {\todo \&text}
+  {\font \color={#ff0000} {\comment TODO} \text {\comment /TODO}}}
+
+\; nicer syntax for {\ul {\li ..}}
+\; {\list
+\;   foo
+\;   {bar baz}
+\;  }
+{\def {\list \&ls}
+  {\ul {\lmap {\lambda {\&l} {\li \l}
+\; newline in the html source here..
+} \ls}}}
+
+{\def {\mailto \=address \&text}
+  {\if {\empty? \text}
+    {\mailto \address=\address \address}
+    {\a \href={mailto:\address} \text}}}
+
+{\def {\person \=url \=name \=email}
+  {
+   {\if \url
+     {\a \href=\url \name}
+     \name}
+   {\if \email
+     {<{\mailto \address=\email}>}}}}
+
+\; define \p to be balanced: <P>..</P>
+{\def {\p \=nonstandard
+       \=align \=class \=dir \=id \=lang \=onclick \=ondblclick \=onkeydown
+       \=onkeypress \=onkeyup \=onmousedown \=onmousemove \=onmouseout
+       \=onmouseover \=onmouseup \=style \=title \&rest}
+      {\_bal-tag p
+	     {class \class dir \dir id \id lang \lang onclick \onclick
+	      ondblclick \ondblclick onkeydown \onkeydown onkeypress
+	      \onkeypress onkeyup \onkeyup onmousedown \onmousedown
+	      onmousemove \onmousemove onmouseout \onmouseout onmouseover
+	      \onmouseover onmouseup \onmouseup style \style title \title}
+	     {}
+	     {align \align}
+             \nonstandard
+	     \rest}}
+
+\; round bytes to human-friendly formats
+{\def {\round-sizes \n}
+  {\def {\worker \s \n}
+    {\if {\ge? \n 1024}
+      {\worker {\cdr \s} {\divide \n 1024}}
+      {\n \/{\car \s}}}}
+  {\if {\equal? 0 {\length \n}}
+    {\em {\small unknown}}
+    {\worker {B kB MB GB TB PB EB ZB YB} \n}}}
+

@@ -1,0 +1,31 @@
+#!/usr/bin/perl -w
+use strict;
+my $destname = shift;
+my $depfile = shift;
+
+defined $destname and $destname ne ''
+  and defined $depfile and $depfile ne ''
+  or die
+  "$0: usage\n",
+  "  $0 destname dependencyfile [sourcefile..]\n",
+  "  (LATTE_PATH will be searched for include files)\n";
+  
+
+my @path = split ':', $ENV{LATTE_PATH};
+
+sub incl($;) {
+  my ($i) = shift;
+  return $i if $i=~m{^[/.]};
+  foreach (@path) {
+    return $_.'/'.$i if -f $_.'/'.$i;
+  }
+  return $i;
+}
+
+print "$destname $depfile:\n";
+while (<>) {
+  chomp;
+  print incl($_), "\n" if s/^.*?\{\\load-library (.+?)\}.*?$/$1/g;
+}
+
+print "set nodefault;\n";

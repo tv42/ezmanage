@@ -1,0 +1,29 @@
+{\load-library libtv.latte}
+
+\; Page template
+{\def {\page \doctitle \&content}
+  {
+   {\comment This file is automatically created, do not edit}
+   {\head {\title \doctitle}}
+   {\body \bgcolor=#ffffff \text=#000000 
+    \link=#9f0000 \vlink=#602080 \alink=#000090}
+    \/{\h1 \doctitle}
+    {\if {\not {\equal? . {\dirname \__FILE__}}}
+      {{\url \file=../ Up}|}}
+   {\if {\not {\equal? \__FILE__ index.latte}}
+     {\url \file={\invert-to-top-index \__FILE__} Top}}
+
+    \content
+        
+    {\p \align=right \style={text-align: right}
+     {\small
+      --{\mailto
+         \address=tv-nospam-web-feedback-hq.yok.utu.fi-4221@hq.yok.utu.fi
+         Tv}
+      {\br}Last Modified 
+      {\process-output date --reference=\__FILE__ "+%m-%d-%Y %H:%M"}.
+      {\br}
+      }
+     }
+   }
+  }

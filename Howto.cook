@@ -1,0 +1,93 @@
+/*
+ * $Id: Howto.cook,v 1.1 2000/03/20 16:39:37 tv42 Exp $
+ */
+
+source_files_latte = index.latte;
+html = [fromto %.latte %.html [source_files_latte]];
+
+source_files_fig = ;
+fig_png = [fromto %.fig %.fig.png [source_files_fig]];
+
+source_files = [source_files_latte] [source_files_fig];
+
+files = [html] [fig_png];
+
+all: [files];
+
+clobber: clean
+{
+	rm -f [files];
+}
+
+clean:
+{
+  rm -f *.tmp *.d; /* only remove intermediary files */
+}
+
+test: [html]
+{
+	weblint [html];
+}
+
+install-scp: [files]
+{
+  scp -B [files] "tv42@shell1.sourceforge.net:www/ezmanage";
+}
+
+install: [files]
+{
+  install -m0644 [files] ~/www/ezmanage;
+}
+
+extra_latte_path = latte-include;
+
+/*** Fig cookbook */
+
+%0%.fig.png: %0%.fig
+{
+  fig2dev -L png %0%.fig %0%.fig.png.tmp;
+  mv %0%.fig.png.tmp %0%.fig.png;
+}
+
+/*** END Fig cookbook */
+
+/*** Latte cookbook */
+
+default_latte_path = '/usr/local/share/latte:/usr/share/latte:.';
+
+if [not [defined latte_path]] then
+{
+  if [defined extra_latte_path] then
+	  latte_path = [default_latte_path]':'[extra_latte_path];
+  else
+	  latte_path = [default_latte_path];
+}
+
+%0%.latte.d: %0%.latte
+{
+  env LATTE_PATH\=[latte_path]
+    ./tools/latte-dep
+      %0%.html %0%.latte.d
+      %0%.latte 
+      >[target].tmp;
+  mv [target].tmp [target];
+}
+
+%0%.html: %0%.latte
+{
+  env LATTE_PATH\=[latte_path]
+    latte-html %0%.latte >%0%.html.tmp;
+  mv %0%.html.tmp %0%.html;
+}
+
+dependency_files = [fromto %0%.latte %0%.latte.d [source_files_latte]];
+#include-cooked [dependency_files]
+
+/*** END Latte cookbook */
+
+
+/*
+ * Local Variables:
+ *  tab-width: 2
+ * End:
+ */
